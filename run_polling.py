@@ -31,6 +31,7 @@ def run_polling(tg_token: str = TELEGRAM_TOKEN):
 
     def forward_group_message(update, context):        
         user_chat_id = update.message.message_thread_id
+        print("user_chat_id", user_chat_id)
         if user_chat_id is None or user_chat_id == 0:
             print("user_chat_id is None")
             return
@@ -39,9 +40,9 @@ def run_polling(tg_token: str = TELEGRAM_TOKEN):
             print("user_id is None")
             return
         try:
-            updater.bot.copyMessage(chat_id=user_id, from_chat_id=update.message.chat_id, message_id=update.message.message_id, protect_content = True)
+            updater.bot.copyMessage(chat_id=user_id, from_chat_id=update.message.chat_id, message_id=update.message.message_id)
         except:
-            print("user_id", str(user_id), "is not valid")
+            print("Can't forward message to user", str(user_id))
             return
         
 
@@ -57,9 +58,9 @@ def run_polling(tg_token: str = TELEGRAM_TOKEN):
         print("group_chat_id", message_thread_id)
       
         try:
-            updater.bot.copyMessage(chat_id=CRM_CHAT_ID, from_chat_id=update.message.chat_id, message_id=update.message.message_id,protect_content = True, message_thread_id = message_thread_id)
+            updater.bot.copyMessage(chat_id=CRM_CHAT_ID, from_chat_id=update.message.chat_id, message_id=update.message.message_id, message_thread_id = message_thread_id)
         except:
-            print("user_id", str(user_id), "is not valid")      
+            print("Can't forward message from user", str(user_id))      
 
     user_message_handler = MessageHandler(Filters.chat_type.private, forward_user_message)
     dp.add_handler(user_message_handler)

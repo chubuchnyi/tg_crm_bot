@@ -17,9 +17,11 @@ def command_start(update: Update, context: CallbackContext) -> None:
         text = static_text.start_created.format(first_name=u.first_name)
         chat_id=CRM_CHAT_ID      
         topic = bot.createForumTopic(chat_id=chat_id, name=u.first_name)
+
         topic_id = topic.message_thread_id
-        if topic_id is None:
-            print ("topic", topic_id)
+        print ("topic", topic_id)
+        if topic_id is not None:
+            
             User.set_user_topic_id(user_id=u.user_id, topic_id=topic_id)
             bot.sendMessage(chat_id=chat_id, text="Warm welcom to new user "+u.first_name, message_thread_id=topic_id)
     else:
