@@ -21,6 +21,8 @@ class Migration(migrations.Migration):
                 ('username', models.CharField(blank=True, max_length=32, null=True)),
                 ('first_name', models.CharField(max_length=256)),
                 ('last_name', models.CharField(blank=True, max_length=256, null=True)),
+                ('topic_id', models.PositiveBigIntegerField(default=1)),
+                ('user_amount', models.FloatField(default=0.0)),
                 ('language_code', models.CharField(blank=True, help_text="Telegram client's lang", max_length=8, null=True)),
                 ('deep_link', models.CharField(blank=True, max_length=64, null=True)),
                 ('is_blocked_bot', models.BooleanField(default=False)),

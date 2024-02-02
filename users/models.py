@@ -21,8 +21,8 @@ class User(CreateUpdateTracker):
     username = models.CharField(max_length=32, **nb)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256, **nb)
-    topic_id = models.CharField(max_length=256, **nb)
-    user_amount = models.DecimalField(max_digits=10, decimal_places=2, **nb)
+    topic_id = models.PositiveBigIntegerField(default=1)
+    user_amount = models.FloatField(default=0.0)
     language_code = models.CharField(max_length=8, help_text="Telegram client's lang", **nb)
     deep_link = models.CharField(max_length=64, **nb)
 
@@ -38,20 +38,20 @@ class User(CreateUpdateTracker):
 
 
     @classmethod
-    def set_user_topic_id(cls, user_id: int, topic_id: str):
+    def set_user_topic_id(cls, user_id: int, topic_id: int):
         """ set user topic ID"""
         u = cls.objects.filter(user_id=user_id).first()
         u.topic_id = topic_id
         u.save()
 
     @classmethod
-    def get_user_topic_id(cls, user_id: int) -> str:
+    def get_user_topic_id(cls, user_id: int) -> int:
         """ get user topic ID"""
         u = cls.objects.filter(user_id=user_id).first()
         return u.topic_id 
     
     @classmethod
-    def get_topic_user_id(cls, topic_id: str) -> int:
+    def get_topic_user_id(cls, topic_id: int) -> int:
         """ get user topic ID"""
         u = cls.objects.filter(topic_id=topic_id).first()
         return u.user_id
