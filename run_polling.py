@@ -32,7 +32,7 @@ def run_polling(tg_token: str = TELEGRAM_TOKEN):
     def forward_group_message(update, context):        
         user_chat_id = update.message.message_thread_id
         print("user_chat_id", user_chat_id)
-        if user_chat_id is None or user_chat_id == 0:
+        if user_chat_id is None or user_chat_id == 0 or user_chat_id == 1:
             print("user_chat_id is None")
             return
         user_id = User.get_topic_user_id(user_chat_id)
@@ -40,7 +40,10 @@ def run_polling(tg_token: str = TELEGRAM_TOKEN):
             print("user_id is None")
             return
         try:
-            updater.bot.copyMessage(chat_id=user_id, from_chat_id=update.message.chat_id, message_id=update.message.message_id)
+            #updater.bot.send_message(chat_id=user_id, text=update.message.text)
+             
+            #updater.bot.forward_message(chat_id=user_id, from_chat_id=update.message.chat_id, message_id=update.message.message_id, protect_content=True)
+            updater.bot.copyMessage(chat_id=user_id, from_chat_id=update.message.chat_id, message_id=update.message.message_id, protect_content=True)
         except:
             print("Can't forward message to user", str(user_id))
             return
@@ -52,13 +55,18 @@ def run_polling(tg_token: str = TELEGRAM_TOKEN):
     def forward_user_message(update, context):
         user_id=update.message.from_user.id
         message_thread_id=User.get_user_topic_id(user_id=user_id)
-        if message_thread_id is None or message_thread_id == 0:
+        if message_thread_id is None or message_thread_id == 0 or message_thread_id == 1:
             print("group_chat_id is None")
             return
-        print("group_chat_id", message_thread_id)
+        if user_id is None or user_id == 0 or user_id == 1:
+            print("user_id is None")
+            return
+        print("group_chat_id", message_thread_id, "user_id", user_id, "message", update.message.text)
       
         try:
-            updater.bot.copyMessage(chat_id=CRM_CHAT_ID, from_chat_id=update.message.chat_id, message_id=update.message.message_id, message_thread_id = message_thread_id)
+            #updater.bot.send_message(chat_id=CRM_CHAT_ID, text=update.message.text, message_thread_id = message_thread_id)
+            #updater.bot.forward_message(chat_id=CRM_CHAT_ID, from_chat_id=update.message.chat_id, message_id=update.message.message_id, protect_content=True, message_thread_id = message_thread_id)
+            updater.bot.copyMessage(chat_id=CRM_CHAT_ID, from_chat_id=user_id, message_id=update.message.message_id, protect_content=True, message_thread_id = message_thread_id)
         except:
             print("Can't forward message from user", str(user_id))      
 
