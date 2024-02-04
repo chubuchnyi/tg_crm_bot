@@ -41,33 +41,58 @@ class User(CreateUpdateTracker):
     def set_user_topic_id(cls, user_id: int, topic_id: int):
         """ set user topic ID"""
         u = cls.objects.filter(user_id=user_id).first()
+        if u is None:
+            u = cls(user_id=user_id)
         u.topic_id = topic_id
         u.save()
 
     @classmethod
     def get_user_topic_id(cls, user_id: int) -> int:
         """ get user topic ID"""
-        u = cls.objects.filter(user_id=user_id).first()
-        return u.topic_id 
+        u = cls.objects.filter(user_id=int(user_id)).first()
+        if u is not None:
+            if hasattr(u, 'topic_id'):
+                return u.topic_id
+            else:
+                print("User does not have topic_id field")
+        else:
+            print("User does not exist")
+        return 0
     
     @classmethod
     def get_topic_user_id(cls, topic_id: int) -> int:
         """ get user topic ID"""
-        u = cls.objects.filter(topic_id=topic_id).first()
-        return u.user_id
+        u = cls.objects.filter(topic_id=int(topic_id)).first()
+        print("u", str(u))
+        if u is not None:
+            #check if user has fiels user_id
+            if hasattr(u, 'user_id'):
+                return u.user_id
+            else:
+                print("User does not have user_id field")
+        else:
+            print("User does not exist")
+        return 0
 
     @classmethod
     def set_user_amount(cls, user_id: int, user_amount: float):
         """ set user topic ID"""
         u = cls.objects.filter(user_id=user_id).first()
-        u.topic_id = user_amount
+        if u is None:
+            u = cls(user_id=user_id)
+        u.user_amount = user_amount
         u.save()
 
     @classmethod
     def get_user_amount(cls, user_id: int) -> float:
         """ get user topic ID"""
         u = cls.objects.filter(user_id=user_id).first()
-        return u.user_amount 
+        if u is not None:
+            if hasattr(u, 'user_amount'):
+                return u.user_amount
+            else:
+                print("User does not have user_amount field")
+        return 0.0 
     
     @classmethod
     def get_user_and_created(cls, update: Update, context: CallbackContext) -> Tuple[User, bool]:
@@ -109,12 +134,4 @@ class User(CreateUpdateTracker):
         return f"{self.first_name} {self.last_name}" if self.last_name else f"{self.first_name}"
 
 
-class Location(CreateTracker):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
 
-    objects = GetOrNoneManager()
-
-    def __str__(self):
-        return f"user: {self.user}, created at {self.created_at.strftime('(%H:%M, %d %B %Y)')}"
