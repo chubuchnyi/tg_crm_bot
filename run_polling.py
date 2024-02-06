@@ -78,7 +78,7 @@ def run_polling(tg_token: str = TELEGRAM_TOKEN):
             # return
             # гифки и локации убивают базу пользователя
 
-    group_message_handler = MessageHandler(Filters.chat_type.groups & Filters.chat_id(CRM_CHAT_ID), forward_group_message, run_async=True)
+    group_message_handler = MessageHandler(Filters.chat_type.groups , forward_group_message, run_async=True)
     dp.add_handler(group_message_handler)
 
     def forward_user_message(update, context):

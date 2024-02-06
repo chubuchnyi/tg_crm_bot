@@ -12,8 +12,11 @@ from tgbot.main import bot
 from dtb.settings import CRM_CHAT_ID
 
 def command_start(update: Update, context: CallbackContext) -> None:
-    u, created = User.get_user_and_created(update, context)
-    if created:
+    user_id = extract_user_data_from_update(update)['user_id']
+   
+    #check if topic_id == 0
+    if User.get_user_topic_id(user_id=user_id) == 0:
+        u, created = User.get_user_and_created(update, context)
         text = static_text.start_created.format(first_name=u.first_name)
         chat_id=CRM_CHAT_ID      
         topic = bot.createForumTopic(chat_id=chat_id, name=u.first_name)
@@ -25,7 +28,7 @@ def command_start(update: Update, context: CallbackContext) -> None:
             User.set_user_topic_id(user_id=u.user_id, topic_id=topic_id)
             bot.sendMessage(chat_id=chat_id, text="Warm welcom to new user "+u.first_name, message_thread_id=topic_id)
     else:
-        text = static_text.start_not_created.format(first_name=u.first_name)
+        text = static_text.start_not_created.format(first_name="Amigo")
 
     update.message.reply_text(text=text,
                               reply_markup=make_keyboard_for_start_command())
